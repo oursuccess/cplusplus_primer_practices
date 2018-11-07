@@ -1,0 +1,9 @@
+vs
+*.un~
+*.in~
+*.cpp~
+*.exe
+*.txt
+*.in
+*.out
+*.ou
