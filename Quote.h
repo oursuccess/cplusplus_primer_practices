@@ -19,6 +19,9 @@ class Quote{
 		virtual double net_price(std::size_t n) const{return n * price;}
 		virtual ~Quote() = default;
 
+		//ex 15.11
+		virtual void debug() const { cout << "bookNo : " << bookNo << " price: " << price;}
+
 	private:
 		std::string bookNo;
 
@@ -35,6 +38,9 @@ class Bulk_quote : public Quote{
 
 		//override
 		double net_price(std::size_t) const override;
+		
+		//exer 15.11
+		void debug() const override { Quote::debug(); cout << " min_qty: " << min_qty << " discount: " << discount;}
 
 	private:
 		std::size_t min_qty = 0;
@@ -58,6 +64,9 @@ class Less_quote : public Quote{
 		Less_quote(const std::string&, double, std::size_t, double);
 
 		double net_price(std::size_t) const override;
+
+		//exer 15.11
+		void debug() const override {Quote::debug(); cout << " max_qty: " << max_qty << " discount: " << discount;}
 
 	private:
 		std::size_t max_qty = 0;
