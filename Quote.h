@@ -41,6 +41,8 @@ class Bulk_quote : public Quote{
 		double discount = 0.0;
 };
 
+Bulk_quote::Bulk_quote(const std::string &s, double d1, std::size_t sz, double d2):Quote(s,d1),min_qty(sz),discount(d2){}
+
 double Bulk_quote::net_price(std::size_t n) const 
 {
 	if(n > min_qty)
@@ -48,8 +50,31 @@ double Bulk_quote::net_price(std::size_t n) const
 	else return n * price;
 }
 
-Bulk_quote::Bulk_quote(const std::string &s, double d1, std::size_t sz, double d2):Quote(s,d1),min_qty(sz),discount(d2){}
+//class less_quote 
+//ex no15.7
+class Less_quote : public Quote{
+	public:
+		Less_quote() = default;
+		Less_quote(const std::string&, double, std::size_t, double);
 
+		double net_price(std::size_t) const override;
+
+	private:
+		std::size_t max_qty = 0;
+		double discount = 0.0;
+};
+
+Less_quote::Less_quote(const std::string& s, double pr, std::size_t sz, double dc):Quote(s,pr),max_qty(sz),discount(dc){}
+
+double Less_quote::net_price(std::size_t n) const
+{
+	if(n > max_qty)
+		return max_qty * price * discount + (n - max_qty) * price;
+	else return n * price * discount;
+}
+
+
+//print_total, the virtual function
 double print_total(ostream &os, const Quote &item, size_t n)
 {
 	double ret = item.net_price(n);
