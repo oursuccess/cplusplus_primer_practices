@@ -95,7 +95,7 @@ class NotQuery: public Query_base {
 
     // concrete class: NotQuery defines all inherited pure virtual functions
 	std::string rep() const {return "~(" + query.rep() + ")";}
-    QueryResult eval(const TextQuery&) const;
+    QueryResult eval(const TextQuery&) const ;
     Query query;
 };
 
