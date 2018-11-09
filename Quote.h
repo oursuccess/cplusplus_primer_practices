@@ -17,7 +17,8 @@ class Quote{
 		Quote(const Quote& qt){
 			bookNo = qt.bookNo;
 			price = qt.price;
-			cout << "this is the Quote" << endl;
+			//debug
+			//cout << "this is the Quote" << endl;
 		}
 		
 		//operator
@@ -54,14 +55,14 @@ class Disc_quote : public Quote{
 		Disc_quote(const Disc_quote& dq):Quote(dq){
 			quantity = dq.quantity;
 			discount = dq.discount;
-			cout << " this is the disc_quote " << endl;
+			//cout << " this is the disc_quote " << endl;
 		}
 
 		Disc_quote& operator=(const Disc_quote& dq){
 			Quote::operator=(dq);
 			quantity = dq.quantity;
 			discount = dq.discount;
-			cout << " this is the disc_quote = " <<endl;
+			//cout << " this is the disc_quote = " <<endl;
 			return *this;
 		}
 
@@ -75,12 +76,12 @@ class Disc_quote : public Quote{
 class Bulk_quote : public Disc_quote{
 	public:
 		Bulk_quote(const std::string &s, double pr, std::size_t sz, double dc):Disc_quote(s,pr,sz,dc){}
-		Bulk_quote(const Bulk_quote& bq):Disc_quote(bq){cout << "this is the Bulk_quote" << endl;}
+		Bulk_quote(const Bulk_quote& bq):Disc_quote(bq){}
 
 		//operator
 		Bulk_quote& operator=(Bulk_quote& bq){
 			Disc_quote::operator=(bq);
-			cout << " this is the Bulk_quote = " << endl;
+			//cout << " this is the Bulk_quote = " << endl;
 			return *this;
 		}
 
@@ -95,12 +96,12 @@ class Bulk_quote : public Disc_quote{
 class Less_quote : public Disc_quote{
 	public: 
 		Less_quote(const std::string &s, double pr, std::size_t sz, double dc):Disc_quote(s,pr,sz,dc){}
-		Less_quote(const Less_quote& bq):Disc_quote(bq){cout << " this is the less_quote " << endl;}
+		Less_quote(const Less_quote& bq):Disc_quote(bq){}
 
 		//operator
 		Less_quote& operator=(Less_quote& bq){
 			Disc_quote::operator=(bq);
-			cout << "this is the Less_quote = " << endl;
+			//cout << "this is the Less_quote = " << endl;
 			return *this;
 		}
 
