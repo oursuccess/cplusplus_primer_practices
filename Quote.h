@@ -11,12 +11,30 @@ using std::endl;
 
 class Quote{
 	public:
+		//constructor
 		Quote() = default;
 		Quote(const std::string &book, double sales_price):bookNo(book),price(sales_price){}
+		Quote(const Quote& qt){
+			bookNo = qt.bookNo;
+			price = qt.price;
+			cout << "this is the Quote" << endl;
+		}
+		
+		//operator
+		Quote& operator=(const Quote& qt){
+			bookNo = qt.bookNo;
+			price = qt.price;
+			cout << " this is the quote = " << endl;
+			return *this;
+		}
 
+		//func
 		std::string isbn() const { return bookNo;}
 
+		//virtual
 		virtual double net_price(std::size_t n) const{return n * price;}
+		
+		//deconstructor
 		virtual ~Quote() = default;
 
 		//ex 15.11
@@ -33,6 +51,19 @@ class Disc_quote : public Quote{
 	public:
 		Disc_quote() = default;
 		Disc_quote(const std::string &s, double pr, std::size_t sz, double dc):Quote(s,pr),quantity(sz),discount(dc){}
+		Disc_quote(const Disc_quote& dq):Quote(dq){
+			quantity = dq.quantity;
+			discount = dq.discount;
+			cout << " this is the disc_quote " << endl;
+		}
+
+		Disc_quote& operator=(const Disc_quote& dq){
+			Quote::operator=(dq);
+			quantity = dq.quantity;
+			discount = dq.discount;
+			cout << " this is the disc_quote = " <<endl;
+			return *this;
+		}
 
 		double net_price(std::size_t) const override = 0;
 
@@ -44,6 +75,14 @@ class Disc_quote : public Quote{
 class Bulk_quote : public Disc_quote{
 	public:
 		Bulk_quote(const std::string &s, double pr, std::size_t sz, double dc):Disc_quote(s,pr,sz,dc){}
+		Bulk_quote(const Bulk_quote& bq):Disc_quote(bq){cout << "this is the Bulk_quote" << endl;}
+
+		//operator
+		Bulk_quote& operator=(Bulk_quote& bq){
+			Disc_quote::operator=(bq);
+			cout << " this is the Bulk_quote = " << endl;
+			return *this;
+		}
 
 		double net_price(std::size_t n) const override
 		{
@@ -56,7 +95,26 @@ class Bulk_quote : public Disc_quote{
 class Less_quote : public Disc_quote{
 	public: 
 		Less_quote(const std::string &s, double pr, std::size_t sz, double dc):Disc_quote(s,pr,sz,dc){}
+		Less_quote(const Less_quote& bq):Disc_quote(bq){cout << " this is the less_quote " << endl;}
 
+		//operator
+		Less_quote& operator=(Less_quote& bq){
+			Disc_quote::operator=(bq);
+			cout << "this is the Less_quote = " << endl;
+			return *this;
+		}
+
+		double net_price(std::size_t n) const override
+		{
+			if(n > quantity)
+				return quantity * price * discount + (n - quantity) * price;
+			else return n * price * discount;
+		}
+};
+
+class Test_quote : public Disc_quote{
+	public:
+		using Disc_quote::Disc_quote;
 		double net_price(std::size_t n) const override
 		{
 			if(n > quantity)
