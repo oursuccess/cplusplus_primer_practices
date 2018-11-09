@@ -3,7 +3,12 @@
 
 #include<string>
 #include<iostream>
+#include<set>
+#include<memory>
 
+using std::multiset;
+using std::shared_ptr;
+using std::make_shared;
 using std::string;
 using std::ostream;
 using std::cout;
@@ -31,6 +36,8 @@ class Quote{
 
 		//func
 		std::string isbn() const { return bookNo;}
+		virtual Quote* clone() const & {return new Quote(*this);}
+		virtual Quote* clone() && { return new Quote(std::move(*this));}
 
 		//virtual
 		virtual double net_price(std::size_t n) const{return n * price;}
@@ -78,6 +85,8 @@ class Bulk_quote : public Disc_quote{
 		Bulk_quote(const std::string &s, double pr, std::size_t sz, double dc):Disc_quote(s,pr,sz,dc){}
 		Bulk_quote(const Bulk_quote& bq):Disc_quote(bq){}
 
+		Bulk_quote* clone() const& override {return new Bulk_quote(*this);}
+		Bulk_quote* clone() && override { return new Bulk_quote(std::move(*this));}
 		//operator
 		Bulk_quote& operator=(Bulk_quote& bq){
 			Disc_quote::operator=(bq);
@@ -188,3 +197,28 @@ double print_total(ostream &os, const Quote &item, size_t n)
 	return ret;
 }
 
+class Basket{
+	public:
+		void add_item(const shared_ptr<Quote> &sale){items.insert(sale);}
+		void add_item(const Quote& sale){items.insert(shared_ptr<Quote>(sale.clone()));}
+		void add_item(Quote && sale) { items.insert(shared_ptr<Quote>(std::move(sale).clone()));}
+		double total_receipt(ostream&) const;
+
+	private:
+		static bool compare(const shared_ptr<Quote> &lhs, const shared_ptr<Quote> &rhs){
+			return lhs -> isbn() < rhs -> isbn();
+		}
+
+		multiset<shared_ptr<Quote>, decltype(compare)*> items{compare};
+};
+
+double Basket::total_receipt(ostream &os) const
+{
+	double sum = 0.0;
+	for(auto iter = items.cbegin(); iter != items.cend(); iter = items.upper_bound(*iter)){
+		sum += print_total(os, **iter, items.count(*iter));
+	}
+
+	os << "Total Sale: " << sum << endl;
+	return sum;
+}
