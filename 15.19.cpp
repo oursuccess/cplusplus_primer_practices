@@ -2,6 +2,7 @@
 
 int main()
 {
+	Base base;
 	Pub_Derv d1;
 	Priv_Derv d2;
 	Proc_Derv d3;
@@ -24,5 +25,13 @@ int main()
 	//error : cannot cast 'Derived_from_protected' to it's protected base class 'Base'
 	//p = &dd3;
 
+	d1.memfcn(base);
+	d2.memfcn(base);
+	d3.memfcn(base);
+	dd1.memfcn(base);
+	//dd2.memfcn(base);
+	dd3.memfcn(base);
+
+	system("pause");
 	return 0;
 }
