@@ -7,6 +7,7 @@ class Base{
 
 	public:
 		void pub_mem();
+		void memfcn(Base &b) { b = *this;}
 	protected:
 		int prot_mem;
 		size_t n;
