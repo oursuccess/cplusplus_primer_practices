@@ -2,6 +2,7 @@
 #define QUERY
 
 //this class is defined in ch 15
+//I will finish it tomorrow...
 #include<string>
 #include<iostream>
 #include<fstream>
