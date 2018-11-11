@@ -83,7 +83,8 @@ class BlobPtr{
 		BlobPtr& operator++();
 		BlobPtr& operator--();
 
-		friend bool operator==(const BlobPtr &b1, const BlobPtr &b2);
+		//operator== should be a template
+		friend bool operator==<T>(const BlobPtr &b1, const BlobPtr &b2);
 		friend bool operator<(const BlobPtr &b1, const BlobPtr &b2);
 
 	private:
@@ -118,7 +119,7 @@ std::shared_ptr<std::vector<T>> BlobPtr<T>::check(std::size_t sz, const std::str
 }
 
 template<typename T>
-bool operator==(const BlobPtr<T> &b1, const BlobPtr<T> &b2){
+bool operator==<T>(const BlobPtr<T> &b1, const BlobPtr<T> &b2){
 	return b1.lock() == b2.lock() && b1.curr == b2.curr;
 }
 
