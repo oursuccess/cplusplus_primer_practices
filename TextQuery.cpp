@@ -7,6 +7,7 @@
 #include<sstream>
 #include<set>
 #include"TextQuery.h"
+#include"DebugDelete.h"
 
 #include<iostream>
 
@@ -24,9 +25,12 @@ using std::string;
 TextQuery::TextQuery(ifstream& infile)
 {
 	string line,word;
-	vsptr = make_shared<vector<string>> ();
+	//expected '(' for function-style cast or type construction if use DebugDelete::DebugDelete
+	vsptr = shared_ptr<vector<string>> (new vector<string>,DebugDelete());
 	//wordLines = make_shared<set<unsigned>> ();
-	lineForWordMap = make_shared<map<string,set<unsigned>>> ();
+	//DebugDelete does not refer to a value if use DebugDelete
+	//if use new to allocate , use shared_ptr instead of make_shared
+	lineForWordMap = shared_ptr<map<string,set<unsigned>>> (new map<string,set<unsigned>>, DebugDelete());
 	unsigned u = 0;
 	while(getline(infile,line)){
 		++u;

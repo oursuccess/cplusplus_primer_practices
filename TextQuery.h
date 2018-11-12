@@ -11,6 +11,7 @@
 #include<vector>
 #include<map>
 #include<set>
+#include"DebugDelete.h"
 
 using std::ifstream;
 using std::string;
