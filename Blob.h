@@ -15,6 +15,8 @@ class Blob{
 
 		Blob();
 		Blob(std::initializer_list<T> il);
+		//use typename to declare that we are declaring a member , not use a static member
+		Blob(typename std::vector<T>::iterator, typename std::vector<T>::iterator);
 		//the nums of elems in Blob;
 		size_type size() const { return data -> size(); }
 		bool empty() const { return data -> empty(); }
@@ -40,6 +42,13 @@ template<typename T>
 Blob<T>::Blob(std::initializer_list<T> il)
 {
 	data = std::make_shared<std::vector<T>>(il);
+}
+
+template<typename T>
+//use typename to declare that we are declaring a member , not use a static member
+Blob<T>::Blob(typename std::vector<T>::iterator beg, typename std::vector<T>::iterator end)
+{
+	data = std::make_shared<std::vector<T>>(beg,end);
 }
 
 template<typename T>
@@ -84,7 +93,7 @@ class BlobPtr{
 		BlobPtr& operator--();
 
 		//operator== should be a template
-		friend bool operator==<T>(const BlobPtr &b1, const BlobPtr &b2);
+		friend bool operator==(const BlobPtr &b1, const BlobPtr &b2);
 		friend bool operator<(const BlobPtr &b1, const BlobPtr &b2);
 
 	private:
@@ -119,7 +128,7 @@ std::shared_ptr<std::vector<T>> BlobPtr<T>::check(std::size_t sz, const std::str
 }
 
 template<typename T>
-bool operator==<T>(const BlobPtr<T> &b1, const BlobPtr<T> &b2){
+bool operator==(const BlobPtr<T> &b1, const BlobPtr<T> &b2){
 	return b1.lock() == b2.lock() && b1.curr == b2.curr;
 }
 
