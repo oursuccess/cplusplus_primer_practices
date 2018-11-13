@@ -1,3 +1,4 @@
+#include<iostream>
 #include"smart_ptr.h"
 
 int main()

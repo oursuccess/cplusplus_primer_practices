@@ -25,8 +25,8 @@ class shared_ptr{
 	//construcor
 	public:
 		shared_ptr(): ptr(new T),ptr_use_count(new size_t(1)),deconstruct(nullptr){}
-		shared_ptr(const shared_ptr &s, void (*)(T *)de = nullptr):ptr(s.ptr),ptr_use_count(s.ptr_use_count),deconstruct(de){ ++*ptr_use_count; }
-		shared_ptr(const T *t, void (*)(T*)de = nullptr):ptr(t),ptr_use_count(new size_t(1)),deconstruct(de){}
+		shared_ptr(const shared_ptr &s, void (*de)(T *)= nullptr):ptr(s.ptr),ptr_use_count(s.ptr_use_count),deconstruct(de){ ++*ptr_use_count; }
+		shared_ptr(const T *t, void (*de)(T*) = nullptr):ptr(t),ptr_use_count(new size_t(1)),deconstruct(de){}
 		~shared_ptr(){
 			if(!--*ptr_use_count){
 				deleteThis();
@@ -115,9 +115,9 @@ class shared_ptr{
 	
 	//member
 	private:
-			*T ptr;
-			*size_t ptr_use_count;
-			void (*)(T*) deconstruct;
+			T* ptr;
+			size_t* ptr_use_count;
+			void (*deconstruct)(T*) ;
 			void deleteThis(){
 				if(deconstruct){
 					deconstruct(ptr);
@@ -144,7 +144,7 @@ void swap(shared_ptr<T> &s1, shared_ptr<T> &s2)
 }
 
 template<typename T>
-shared_ptr<T> make_shared<T>(T t)
+shared_ptr<T> make_shared(T t)
 {
 	return shared_ptr<T>(new T(t));
 }
