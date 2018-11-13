@@ -27,6 +27,7 @@ class shared_ptr{
 		shared_ptr(): ptr(new T),ptr_use_count(new size_t(1)),deconstruct(nullptr){}
 		shared_ptr(const shared_ptr &s, void (*de)(T *)= nullptr):ptr(s.ptr),ptr_use_count(s.ptr_use_count),deconstruct(de){ ++*ptr_use_count; }
 		shared_ptr(const T *t, void (*de)(T*) = nullptr):ptr(t),ptr_use_count(new size_t(1)),deconstruct(de){}
+		shared_ptr(T *t, void (*de)(T*) = nullptr):ptr(t),ptr_use_count(new size_t(1)),deconstruct(de){}
 		~shared_ptr(){
 			if(!--*ptr_use_count){
 				deleteThis();
@@ -64,14 +65,24 @@ class shared_ptr{
 			return *this;
 		}
 
-		const T operator*(const shared_ptr &s)
+		const T* operator->() const 
 		{
-			return *s.ptr;
+			return ptr;
 		}
 
-		T operator*(shared_ptr &s)
+		T* operator->() 
 		{
-			return *s.ptr;
+			return ptr;
+		}
+
+		const T& operator*() const 
+		{
+			return *ptr;
+		}
+
+		T& operator*()
+		{
+			return *ptr;
 		}
 	
 	//friend
