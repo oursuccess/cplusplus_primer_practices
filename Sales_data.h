@@ -12,13 +12,15 @@ class Sales_data{
 		//friend
 		friend bool compareIsbn(const Sales_data&, const Sales_data&);
 		friend std::istream& operator>>(std::istream &is, Sales_data& item);
+		friend std::ostream& operator<<(std::ostream &os, const Sales_data &item);
 		//ch16
 		friend class std::hash<Sales_data>;
 		friend bool operator==(const Sales_data &, const Sales_data &);
+		friend Sales_data operator+(const Sales_data &item1, const Sales_data &item2);
 
 	public:
 		//constructor
-		Sales_data(std::string s,unsigned u,double r):bookNo(s),units_sold(u),revenue(r){}
+		Sales_data(std::string s,unsigned u = 0,double r = 0):bookNo(s),units_sold(u),revenue(r){}
 		Sales_data():Sales_data("",0,0.0){}
 		Sales_data(std::istream&);
 		
@@ -26,6 +28,14 @@ class Sales_data{
 		//func
 		std::string isbn() const {return bookNo;}
 		std::ostream& printData(std::ostream& os = std::cout );
+
+		//operater
+		Sales_data& operator+=(const Sales_data &s)
+		{
+			units_sold += s.units_sold;
+			revenue += s.revenue;
+			return *this;
+		}
 
 	private:
 		//private func
@@ -45,7 +55,7 @@ Sales_data::Sales_data(std::istream &in )
 	revenue = price * units_sold;
 }
 
-//operater
+
 std::istream& operator>>(std::istream &is,Sales_data& item)
 {
 	double price;
@@ -90,6 +100,24 @@ namespace std{
 bool operator==(const Sales_data &s1, const Sales_data &s2)
 {
 	return s1.bookNo == s2.bookNo && s1.units_sold == s2.units_sold && s1.revenue == s2.revenue;
+}
+
+std::ostream & operator<<(std::ostream &os, const Sales_data &item)
+{
+	os << item.isbn() << " sales: " << item.units_sold << " ,earn " << item.revenue;
+	return os;
+}
+
+Sales_data operator+(const Sales_data &item1, const Sales_data &item2)
+{
+	if(item1.isbn() == item2.isbn())
+		return Sales_data(item1.isbn(), item1.units_sold + item2.units_sold, item1.revenue + item2.revenue);
+}
+
+//compare_isbn
+bool compareIsbn(const Sales_data &item1, const Sales_data &item2)
+{
+	return item1.isbn() == item2.isbn();
 }
 
 #endif
