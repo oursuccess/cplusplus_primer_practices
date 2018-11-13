@@ -11,6 +11,10 @@ int main()
 	bi.push_back(l);
 
 	Blob<int> bj(bi);
+	std::cout<< " bj: ";
+	for(auto s : bj){
+		std::cout << s << "\t";
+	}
 
 	system("pause");
 	return 0;

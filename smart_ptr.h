@@ -42,25 +42,28 @@ class shared_ptr{
 				return *this;
 			++*s.ptr_use_count;
 			if(!--*ptr_use_count)
-				deleteThis;
+				deleteThis();
 			ptr = s.ptr;
 			ptr_use_count = s.ptr_use_count;
 			deconstruct = s.deconstruct;
 			return *this;
 		}
 
-		shared_ptr& operator=(shared_ptr &&stmp)
+		shared_ptr& operator=(shared_ptr &&s)
 		{
-			if(*this == s)
-				return *this;
+			//this equal function should be different from the last one
+			//and no need to do this in case s is temporary
+			//if(*this == s)
+			//	return *this;
 			++*s.ptr_use_count;
 			if(!--*ptr_use_count)
-				deleteThis;
+				deleteThis();
 			ptr = s.ptr;
 			ptr_use_count = s.ptr_use_count;
 			deconstruct = s.deconstruct;
-			stmp.ptr = nullptr;
-			s.ptr_use_count = nullptr;
+			s.ptr = nullptr;
+			//if set this to nullptr, then we cannot use deconstructor
+			s.ptr_use_count = new size_t(1);
 			s.deconstruct = nullptr;
 			return *this;
 		}
@@ -108,7 +111,7 @@ class shared_ptr{
 				deleteThis();
 			ptr = nullptr;
 			deconstruct = nullptr;
-			ptr_use_count = nullptr;
+			ptr_use_count = new size_t(1);
 		}
 
 		void reset(const shared_ptr &s, void (*)(T*) = nullptr)
@@ -155,7 +158,7 @@ void swap(shared_ptr<T> &s1, shared_ptr<T> &s2)
 }
 
 template<typename T>
-shared_ptr<T> make_shared(T t)
+shared_ptr<T> make_shared(T t  = T())
 {
 	return shared_ptr<T>(new T(t));
 }

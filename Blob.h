@@ -2,9 +2,11 @@
 #define BLOB
 
 #include<iostream>
-#include<memory>
 #include<exception>
+#include<iterator>
+#include<memory>
 #include<vector>
+#include"smart_ptr.h"
 
 template<typename T>
 class Blob{
@@ -25,30 +27,34 @@ class Blob{
 		void push_back(const T &t) { data -> push_back(t); }
 		void pop_back();
 
+		//iterator
+		auto begin(){ return data -> begin(); }
+		typename std::vector<T>::iterator end() { return data -> end(); }
+
 		//visit elem
 		T& back();
 		T& operator[](size_type i);
 
 	private:
-		std::shared_ptr<std::vector<T>> data;
+		shared_ptr<std::vector<T>> data;
 		//if data[i] is invalid, throw a msg
 		void check(size_type i, const std::string &msg) const;
 };
 
 template<typename T>
-Blob<T>::Blob(){ data = std::make_shared<std::vector<T>>(); }
+Blob<T>::Blob(){ data = make_shared<std::vector<T>>(); }
 
 template<typename T>
 Blob<T>::Blob(std::initializer_list<T> il)
 {
-	data = std::make_shared<std::vector<T>>(il);
+	data = make_shared<std::vector<T>>(il);
 }
 
 template<typename T>
 //use typename to declare that we are declaring a member , not use a static member
 Blob<T>::Blob(typename std::vector<T>::iterator beg, typename std::vector<T>::iterator end)
 {
-	data = std::make_shared<std::vector<T>>(beg,end);
+	data = make_shared<std::vector<T>>(beg,end);
 }
 
 template<typename T>
@@ -98,7 +104,7 @@ class BlobPtr{
 
 	private:
 		//if true, the check returns a shared_ptr to vector
-		std::shared_ptr<std::vector<T>> check(std::size_t, const std::string&) const;
+		shared_ptr<std::vector<T>> check(std::size_t, const std::string&) const;
 		//keep a weak_ptr, declares that vector may be deleted
 		std::weak_ptr<std::vector<T>> wptr;
 		std::size_t curr;
@@ -119,9 +125,9 @@ BlobPtr<T>& BlobPtr<T>::operator--()
 }
 
 template<typename T>
-std::shared_ptr<std::vector<T>> BlobPtr<T>::check(std::size_t sz, const std::string& s) const
+shared_ptr<std::vector<T>> BlobPtr<T>::check(std::size_t sz, const std::string& s) const
 {
-	auto tp = lock();
+	auto tp = wptr.lock();
 	if(tp.size() > sz)
 		return tp;
 	else throw std::out_of_range(s);
