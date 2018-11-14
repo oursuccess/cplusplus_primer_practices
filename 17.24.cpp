@@ -7,7 +7,7 @@ using namespace std;
 string phone = "(\\()?(\\d{3})(\\))?([-.])?(\\d{3})([-.]?)(\\d{4})";
 regex r(phone);
 smatch m;
-string fmt = "$s2.$s5.$7";
+string fmt = "$2.$5.$7";
 string s;
 
 bool valid(const smatch& m)
@@ -24,7 +24,7 @@ int main()
 	while(getline(cin, s)){
 		for(sregex_iterator it(s.begin(), s.end(), r), end_it; it != end_it; ++it){
 			if(valid(*it))
-				cout << "valid: " << it -> str() << endl;
+				cout << "valid: " << regex_replace(it -> str(),r,fmt) << endl;
 			else
 				cout << "not valid: " << it -> str() << endl;
 		}
